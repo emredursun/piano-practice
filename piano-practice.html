@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Piyano Pratik Stüdyosu</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=JetBrains+Mono:wght@400;600&display=swap');
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    background: linear-gradient(135deg, #0a0a0f 0%, #1a0f1f 50%, #0f0a1a 100%);
+    min-height: 100vh;
+    font-family: 'Cormorant Garamond', serif;
+    color: #e8e0d5;
+    overflow-x: hidden;
+    padding: 40px 20px;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: radial-gradient(circle at 20% 50%, rgba(217, 119, 87, 0.08) 0%, transparent 50%),
+                      radial-gradient(circle at 80% 20%, rgba(139, 90, 150, 0.08) 0%, transparent 50%),
+                      radial-gradient(circle at 40% 80%, rgba(217, 165, 119, 0.05) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+
+  .header {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+
+  .header-ornament {
+    display: inline-block;
+    font-size: 24px;
+    color: #d97757;
+    letter-spacing: 8px;
+    margin-bottom: 12px;
+  }
+
+  h1 {
+    font-size: 64px;
+    font-weight: 300;
+    letter-spacing: -1px;
+    background: linear-gradient(180deg, #f4ead5 0%, #d97757 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 8px;
+    line-height: 1;
+  }
+
+  .subtitle {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 4px;
+    color: #8a7a6a;
+    text-transform: uppercase;
+  }
+
+  .lesson-selector {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: center;
+    margin-bottom: 40px;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(217, 119, 87, 0.15);
+    border-radius: 4px;
+    backdrop-filter: blur(10px);
+  }
+
+  .lesson-btn {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 12px 20px;
+    background: transparent;
+    border: 1px solid rgba(232, 224, 213, 0.2);
+    color: #e8e0d5;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-radius: 2px;
+  }
+
+  .lesson-btn:hover {
+    border-color: #d97757;
+    color: #d97757;
+    transform: translateY(-1px);
+  }
+
+  .lesson-btn.active {
+    background: #d97757;
+    border-color: #d97757;
+    color: #0a0a0f;
+  }
+
+  .info-panel {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 30px;
+    align-items: center;
+    margin-bottom: 30px;
+    padding: 24px;
+    background: rgba(255, 255, 255, 0.02);
+    border-top: 1px solid rgba(217, 119, 87, 0.2);
+    border-bottom: 1px solid rgba(217, 119, 87, 0.2);
+  }
+
+  .current-note-display {
+    text-align: center;
+  }
+
+  .current-note-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: #8a7a6a;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .current-note {
+    font-size: 72px;
+    font-weight: 300;
+    color: #d97757;
+    line-height: 1;
+    font-style: italic;
+  }
+
+  .lesson-info {
+    text-align: left;
+  }
+
+  .lesson-title {
+    font-size: 28px;
+    font-weight: 400;
+    margin-bottom: 6px;
+  }
+
+  .lesson-description {
+    font-size: 14px;
+    color: #8a7a6a;
+    font-style: italic;
+  }
+
+  .controls {
+    text-align: right;
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    align-items: center;
+  }
+
+  .control-btn {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: 1px solid rgba(217, 119, 87, 0.4);
+    background: transparent;
+    color: #d97757;
+    cursor: pointer;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+  }
+
+  .control-btn:hover {
+    background: rgba(217, 119, 87, 0.1);
+    transform: scale(1.05);
+  }
+
+  .control-btn.play {
+    background: #d97757;
+    color: #0a0a0f;
+    width: 56px;
+    height: 56px;
+    font-size: 20px;
+  }
+
+  .control-btn.play:hover {
+    background: #e8875e;
+  }
+
+  .tempo-control {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .tempo-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: #8a7a6a;
+  }
+
+  .tempo-slider {
+    width: 80px;
+    accent-color: #d97757;
+  }
+
+  .tempo-value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: #d97757;
+  }
+
+  /* Piano */
+  .piano-container {
+    position: relative;
+    padding: 30px 20px;
+    background: linear-gradient(180deg, #1a1015 0%, #0f0a12 100%);
+    border-radius: 8px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5),
+                inset 0 1px 0 rgba(217, 119, 87, 0.1);
+    overflow: hidden;
+  }
+
+  .piano-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, #d97757, transparent);
+  }
+
+  .piano {
+    position: relative;
+    display: flex;
+    height: 240px;
+    background: #000;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .white-key {
+    flex: 1;
+    background: linear-gradient(180deg, #f4ead5 0%, #e8dec5 95%, #c8b896 100%);
+    border-right: 1px solid #a89878;
+    position: relative;
+    cursor: pointer;
+    transition: all 0.08s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+    padding-bottom: 16px;
+  }
+
+  .white-key:last-child {
+    border-right: none;
+  }
+
+  .white-key:hover {
+    background: linear-gradient(180deg, #ffffff 0%, #f4ead5 95%, #d8c8a6 100%);
+  }
+
+  .white-key.active,
+  .white-key.playing {
+    background: linear-gradient(180deg, #d97757 0%, #c0654a 100%);
+    box-shadow: inset 0 4px 12px rgba(0, 0, 0, 0.3);
+    transform: translateY(2px);
+  }
+
+  .white-key.highlight {
+    background: linear-gradient(180deg, #f5c89a 0%, #e8b088 100%);
+    box-shadow: 0 0 20px rgba(217, 119, 87, 0.6),
+                inset 0 0 20px rgba(217, 119, 87, 0.3);
+  }
+
+  .white-key.next-hint {
+    background: linear-gradient(180deg, #a8d8e8 0%, #88bccf 100%);
+    animation: pulse 1.2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { box-shadow: 0 0 15px rgba(168, 216, 232, 0.4); }
+    50% { box-shadow: 0 0 30px rgba(168, 216, 232, 0.9), inset 0 0 20px rgba(168, 216, 232, 0.4); }
+  }
+
+  .key-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: #5a4a3a;
+    letter-spacing: 1px;
+    font-weight: 600;
+  }
+
+  .key-finger {
+    position: absolute;
+    top: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: #0a0a0f;
+    color: #d97757;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    font-weight: 700;
+    border: 2px solid #d97757;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+    z-index: 5;
+  }
+
+  .white-key.show-finger .key-finger,
+  .black-key.show-finger .key-finger {
+    display: flex;
+  }
+
+  .black-keys {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 62%;
+    pointer-events: none;
+    display: flex;
+  }
+
+  .black-key-wrapper {
+    flex: 1;
+    position: relative;
+  }
+
+  .black-key {
+    position: absolute;
+    top: 0;
+    left: 70%;
+    width: 60%;
+    height: 100%;
+    background: linear-gradient(180deg, #2a1f1a 0%, #0a0505 100%);
+    border-radius: 0 0 3px 3px;
+    cursor: pointer;
+    pointer-events: auto;
+    transition: all 0.08s ease;
+    z-index: 2;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6),
+                inset 0 -4px 0 rgba(0, 0, 0, 0.4);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+    padding-bottom: 10px;
+  }
+
+  .black-key:hover {
+    background: linear-gradient(180deg, #3a2f2a 0%, #1a1515 100%);
+  }
+
+  .black-key.active,
+  .black-key.playing {
+    background: linear-gradient(180deg, #8a4a37 0%, #5a2f24 100%);
+    transform: translateY(2px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.6),
+                inset 0 -2px 0 rgba(0, 0, 0, 0.4);
+  }
+
+  .black-key.highlight {
+    background: linear-gradient(180deg, #c08060 0%, #8a5038 100%);
+    box-shadow: 0 0 20px rgba(217, 119, 87, 0.8);
+  }
+
+  .black-key.next-hint {
+    background: linear-gradient(180deg, #5a8aa8 0%, #3a6080 100%);
+    animation: pulse 1.2s ease-in-out infinite;
+  }
+
+  .black-key .key-label {
+    color: #d97757;
+    font-size: 9px;
+  }
+
+  .black-key .key-finger {
+    top: 8px;
+    background: #ffffff;
+    color: #0a0a0f;
+    border: 2px solid #d97757;
+    width: 22px;
+    height: 22px;
+    font-size: 12px;
+    font-weight: 700;
+    box-shadow: 0 0 12px rgba(255, 255, 255, 0.6),
+                0 2px 4px rgba(0, 0, 0, 0.5);
+    z-index: 10;
+  }
+
+  /* Progress */
+  .progress-section {
+    margin-top: 30px;
+    padding: 24px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(217, 119, 87, 0.15);
+    border-radius: 4px;
+  }
+
+  .progress-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #8a7a6a;
+  }
+
+  .progress-bar {
+    height: 4px;
+    background: rgba(232, 224, 213, 0.1);
+    border-radius: 2px;
+    overflow: hidden;
+    margin-bottom: 20px;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #d97757, #f5c89a);
+    width: 0%;
+    transition: width 0.3s ease;
+  }
+
+  .note-sequence {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+  }
+
+  .note-chip {
+    padding: 6px 12px;
+    border: 1px solid rgba(232, 224, 213, 0.2);
+    border-radius: 2px;
+    color: #8a7a6a;
+    transition: all 0.3s ease;
+  }
+
+  .note-chip.completed {
+    background: rgba(217, 119, 87, 0.15);
+    border-color: #d97757;
+    color: #d97757;
+  }
+
+  .note-chip.current {
+    background: #d97757;
+    border-color: #d97757;
+    color: #0a0a0f;
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(217, 119, 87, 0.4);
+  }
+
+  .instructions {
+    margin-top: 30px;
+    padding: 20px;
+    background: rgba(217, 119, 87, 0.05);
+    border-left: 3px solid #d97757;
+    font-size: 15px;
+    line-height: 1.7;
+    color: #c8b896;
+    font-style: italic;
+  }
+
+  .instructions strong {
+    color: #d97757;
+    font-style: normal;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 1px;
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+  }
+
+  @media (max-width: 768px) {
+    h1 { font-size: 42px; }
+    .info-panel { grid-template-columns: 1fr; text-align: center; }
+    .lesson-info, .controls { text-align: center; justify-content: center; }
+    .piano { height: 180px; }
+    .current-note { font-size: 56px; }
+    .key-label { font-size: 9px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <div class="header-ornament">◆ ◆ ◆</div>
+    <h1>Piyano Stüdyosu</h1>
+    <div class="subtitle">Görsel Pratik — Adım Adım Öğren</div>
+  </div>
+
+  <div class="lesson-selector" id="lessonSelector"></div>
+
+  <div class="info-panel">
+    <div class="lesson-info">
+      <div class="lesson-title" id="lessonTitle">C Majör Gamı</div>
+      <div class="lesson-description" id="lessonDescription">Piyanonun temel gamı — tüm beyaz tuşlar</div>
+    </div>
+    <div class="current-note-display">
+      <div class="current-note-label">Şu an çalınan</div>
+      <div class="current-note" id="currentNote">—</div>
+    </div>
+    <div class="controls">
+      <div class="tempo-control">
+        <span class="tempo-label">TEMPO</span>
+        <input type="range" class="tempo-slider" id="tempoSlider" min="400" max="1500" value="700" step="50">
+        <span class="tempo-value" id="tempoValue">700ms</span>
+      </div>
+      <button class="control-btn" id="prevBtn" title="Geri">◀</button>
+      <button class="control-btn play" id="playBtn" title="Oynat/Duraklat">▶</button>
+      <button class="control-btn" id="resetBtn" title="Sıfırla">↻</button>
+    </div>
+  </div>
+
+  <div class="piano-container">
+    <div class="piano" id="piano"></div>
+  </div>
+
+  <div class="progress-section">
+    <div class="progress-header">
+      <span>İLERLEYİŞ</span>
+      <span id="progressText">0 / 0</span>
+    </div>
+    <div class="progress-bar">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+    <div class="note-sequence" id="noteSequence"></div>
+  </div>
+
+  <div class="instructions">
+    <strong>NASIL PRATİK YAPILIR</strong>
+    Mavi yanıp sönen tuş sıradaki basılacak tuştur. Turuncu yanan tuş şu an çalınandır. Sayılar (1-5) hangi parmağını kullanacağını gösterir — 1: başparmak, 5: serçe parmak. Önce yavaş tempoda izle, sonra kendin dene. Oynat düğmesiyle melodiyi başlat, gerçek piyanonda aynısını uygula.
+  </div>
+</div>
+
+<script>
+  // Note frequencies (Hz)
+  const NOTES = {
+    'C4': 261.63, 'C#4': 277.18, 'D4': 293.66, 'D#4': 311.13,
+    'E4': 329.63, 'F4': 349.23, 'F#4': 369.99, 'G4': 392.00,
+    'G#4': 415.30, 'A4': 440.00, 'A#4': 466.16, 'B4': 493.88,
+    'C5': 523.25, 'C#5': 554.37, 'D5': 587.33, 'D#5': 622.25,
+    'E5': 659.25, 'F5': 698.46, 'F#5': 739.99, 'G5': 783.99,
+    'G#5': 830.61, 'A5': 880.00, 'A#5': 932.33, 'B5': 987.77,
+    'C6': 1046.50
+  };
+
+  // Piano key layout (2 octaves)
+  const WHITE_KEYS = ['C4', 'D4', 'E4', 'F4', 'G4', 'A4', 'B4', 'C5', 'D5', 'E5', 'F5', 'G5', 'A5', 'B5', 'C6'];
+  const BLACK_KEYS_POSITIONS = {
+    'C#4': 0, 'D#4': 1, 'F#4': 3, 'G#4': 4, 'A#4': 5,
+    'C#5': 7, 'D#5': 8, 'F#5': 10, 'G#5': 11, 'A#5': 12
+  };
+
+  // Lessons
+  const LESSONS = {
+    'c-major': {
+      title: 'C Majör Gamı',
+      description: 'Tüm beyaz tuşlar — piyanonun temeli',
+      notes: [
+        {note: 'C4', finger: 1}, {note: 'D4', finger: 2}, {note: 'E4', finger: 3},
+        {note: 'F4', finger: 1}, {note: 'G4', finger: 2}, {note: 'A4', finger: 3},
+        {note: 'B4', finger: 4}, {note: 'C5', finger: 5},
+        {note: 'B4', finger: 4}, {note: 'A4', finger: 3}, {note: 'G4', finger: 2},
+        {note: 'F4', finger: 1}, {note: 'E4', finger: 3}, {note: 'D4', finger: 2}, {note: 'C4', finger: 1}
+      ]
+    },
+    'g-major': {
+      title: 'G Majör Gamı',
+      description: 'F# içeren gam — siyah tuş pratiği',
+      notes: [
+        {note: 'G4', finger: 1}, {note: 'A4', finger: 2}, {note: 'B4', finger: 3},
+        {note: 'C5', finger: 1}, {note: 'D5', finger: 2}, {note: 'E5', finger: 3},
+        {note: 'F#5', finger: 4}, {note: 'G5', finger: 5}
+      ]
+    },
+    'twinkle': {
+      title: 'Parlak Yıldız',
+      description: 'Klasik çocuk şarkısı — melodi pratiği',
+      notes: [
+        {note: 'C4', finger: 1}, {note: 'C4', finger: 1}, {note: 'G4', finger: 2}, {note: 'G4', finger: 2},
+        {note: 'A4', finger: 3}, {note: 'A4', finger: 3}, {note: 'G4', finger: 2},
+        {note: 'F4', finger: 1}, {note: 'F4', finger: 1}, {note: 'E4', finger: 3}, {note: 'E4', finger: 3},
+        {note: 'D4', finger: 2}, {note: 'D4', finger: 2}, {note: 'C4', finger: 1}
+      ]
+    },
+    'ode-joy': {
+      title: 'Neşeye Övgü',
+      description: 'Beethoven 9. Senfoni — basitleştirilmiş',
+      notes: [
+        {note: 'E4', finger: 3}, {note: 'E4', finger: 3}, {note: 'F4', finger: 4}, {note: 'G4', finger: 5},
+        {note: 'G4', finger: 5}, {note: 'F4', finger: 4}, {note: 'E4', finger: 3}, {note: 'D4', finger: 2},
+        {note: 'C4', finger: 1}, {note: 'C4', finger: 1}, {note: 'D4', finger: 2}, {note: 'E4', finger: 3},
+        {note: 'E4', finger: 3}, {note: 'D4', finger: 2}, {note: 'D4', finger: 2}
+      ]
+    },
+    'c-chord': {
+      title: 'C Majör Akoru',
+      description: 'Üç ton birlikte — C, E, G',
+      notes: [
+        {note: 'C4', finger: 1}, {note: 'E4', finger: 3}, {note: 'G4', finger: 5},
+        {note: 'C4', finger: 1}, {note: 'E4', finger: 3}, {note: 'G4', finger: 5}
+      ]
+    },
+    'chromatic': {
+      title: 'Kromatik',
+      description: 'Tüm tuşlar sırayla — parmak bağımsızlığı',
+      notes: [
+        {note: 'C4', finger: 1}, {note: 'C#4', finger: 2}, {note: 'D4', finger: 3},
+        {note: 'D#4', finger: 1}, {note: 'E4', finger: 2}, {note: 'F4', finger: 1},
+        {note: 'F#4', finger: 2}, {note: 'G4', finger: 3}, {note: 'G#4', finger: 1},
+        {note: 'A4', finger: 2}, {note: 'A#4', finger: 3}, {note: 'B4', finger: 1}, {note: 'C5', finger: 2}
+      ]
+    }
+  };
+
+  let currentLesson = 'c-major';
+  let currentStep = 0;
+  let isPlaying = false;
+  let playInterval = null;
+  let tempo = 700;
+  let audioContext = null;
+
+  // Init audio
+  function initAudio() {
+    if (!audioContext) {
+      audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    }
+  }
+
+  // Play note sound
+  function playSound(noteName, duration = 0.5) {
+    initAudio();
+    const freq = NOTES[noteName];
+    if (!freq) return;
+
+    const now = audioContext.currentTime;
+    const osc = audioContext.createOscillator();
+    const gain = audioContext.createGain();
+    const osc2 = audioContext.createOscillator();
+    const gain2 = audioContext.createGain();
+
+    osc.type = 'triangle';
+    osc.frequency.value = freq;
+    osc2.type = 'sine';
+    osc2.frequency.value = freq * 2;
+
+    gain.gain.setValueAtTime(0, now);
+    gain.gain.linearRampToValueAtTime(0.3, now + 0.01);
+    gain.gain.exponentialRampToValueAtTime(0.01, now + duration);
+
+    gain2.gain.setValueAtTime(0, now);
+    gain2.gain.linearRampToValueAtTime(0.08, now + 0.01);
+    gain2.gain.exponentialRampToValueAtTime(0.005, now + duration);
+
+    osc.connect(gain);
+    gain.connect(audioContext.destination);
+    osc2.connect(gain2);
+    gain2.connect(audioContext.destination);
+
+    osc.start(now);
+    osc.stop(now + duration);
+    osc2.start(now);
+    osc2.stop(now + duration);
+  }
+
+  // Build piano
+  function buildPiano() {
+    const piano = document.getElementById('piano');
+    piano.innerHTML = '';
+
+    // White keys
+    WHITE_KEYS.forEach((noteName, idx) => {
+      const key = document.createElement('div');
+      key.className = 'white-key';
+      key.dataset.note = noteName;
+      key.innerHTML = `
+        <div class="key-finger"></div>
+        <div class="key-label">${noteName.replace(/\d/g, '')}</div>
+      `;
+      key.addEventListener('mousedown', () => {
+        playSound(noteName);
+        key.classList.add('playing');
+        setTimeout(() => key.classList.remove('playing'), 200);
+        updateCurrentNote(noteName);
+      });
+      piano.appendChild(key);
+    });
+
+    // Black keys overlay
+    const blackOverlay = document.createElement('div');
+    blackOverlay.className = 'black-keys';
+
+    WHITE_KEYS.forEach((_, idx) => {
+      const wrapper = document.createElement('div');
+      wrapper.className = 'black-key-wrapper';
+
+      const blackNote = Object.keys(BLACK_KEYS_POSITIONS).find(
+        k => BLACK_KEYS_POSITIONS[k] === idx
+      );
+
+      if (blackNote) {
+        const blackKey = document.createElement('div');
+        blackKey.className = 'black-key';
+        blackKey.dataset.note = blackNote;
+        blackKey.innerHTML = `
+          <div class="key-finger"></div>
+          <div class="key-label">${blackNote.replace(/\d/g, '')}</div>
+        `;
+        blackKey.addEventListener('mousedown', (e) => {
+          e.stopPropagation();
+          playSound(blackNote);
+          blackKey.classList.add('playing');
+          setTimeout(() => blackKey.classList.remove('playing'), 200);
+          updateCurrentNote(blackNote);
+        });
+        wrapper.appendChild(blackKey);
+      }
+
+      blackOverlay.appendChild(wrapper);
+    });
+
+    piano.appendChild(blackOverlay);
+  }
+
+  // Build lesson selector
+  function buildLessonSelector() {
+    const selector = document.getElementById('lessonSelector');
+    selector.innerHTML = '';
+    Object.entries(LESSONS).forEach(([key, lesson]) => {
+      const btn = document.createElement('button');
+      btn.className = 'lesson-btn' + (key === currentLesson ? ' active' : '');
+      btn.textContent = lesson.title;
+      btn.addEventListener('click', () => {
+        currentLesson = key;
+        currentStep = 0;
+        stopPlayback();
+        updateUI();
+      });
+      selector.appendChild(btn);
+    });
+  }
+
+  // Update current note display
+  function updateCurrentNote(noteName) {
+    const display = document.getElementById('currentNote');
+    display.textContent = noteName ? noteName.replace(/\d/g, '') : '—';
+  }
+
+  // Clear all key states
+  function clearKeyStates() {
+    document.querySelectorAll('.white-key, .black-key').forEach(k => {
+      k.classList.remove('active', 'highlight', 'next-hint', 'show-finger');
+      const finger = k.querySelector('.key-finger');
+      if (finger) finger.textContent = '';
+    });
+  }
+
+  // Highlight note
+  function highlightNote(noteName, cls = 'highlight', finger = null) {
+    const key = document.querySelector(`[data-note="${noteName}"]`);
+    if (key) {
+      key.classList.add(cls);
+      if (finger) {
+        key.classList.add('show-finger');
+        const fingerEl = key.querySelector('.key-finger');
+        if (fingerEl) fingerEl.textContent = finger;
+      }
+    }
+  }
+
+  // Update UI
+  function updateUI() {
+    const lesson = LESSONS[currentLesson];
+    document.getElementById('lessonTitle').textContent = lesson.title;
+    document.getElementById('lessonDescription').textContent = lesson.description;
+
+    // Update lesson buttons
+    document.querySelectorAll('.lesson-btn').forEach((btn, idx) => {
+      btn.classList.toggle('active', Object.keys(LESSONS)[idx] === currentLesson);
+    });
+
+    clearKeyStates();
+
+    // Current note
+    if (currentStep < lesson.notes.length) {
+      const current = lesson.notes[currentStep];
+      highlightNote(current.note, 'active', current.finger);
+      updateCurrentNote(current.note);
+
+      // Next hint
+      if (currentStep + 1 < lesson.notes.length) {
+        const next = lesson.notes[currentStep + 1];
+        highlightNote(next.note, 'next-hint');
+      }
+    } else {
+      updateCurrentNote('');
+    }
+
+    // Progress
+    const total = lesson.notes.length;
+    const progress = (currentStep / total) * 100;
+    document.getElementById('progressFill').style.width = progress + '%';
+    document.getElementById('progressText').textContent = `${currentStep} / ${total}`;
+
+    // Note sequence
+    const seq = document.getElementById('noteSequence');
+    seq.innerHTML = '';
+    lesson.notes.forEach((n, idx) => {
+      const chip = document.createElement('div');
+      chip.className = 'note-chip';
+      if (idx < currentStep) chip.classList.add('completed');
+      if (idx === currentStep) chip.classList.add('current');
+      chip.textContent = n.note.replace(/\d/g, '');
+      seq.appendChild(chip);
+    });
+  }
+
+  // Playback
+  function playStep() {
+    const lesson = LESSONS[currentLesson];
+    if (currentStep >= lesson.notes.length) {
+      stopPlayback();
+      currentStep = 0;
+      updateUI();
+      return;
+    }
+    const note = lesson.notes[currentStep];
+    playSound(note.note, tempo / 1000 * 0.9);
+    currentStep++;
+    updateUI();
+  }
+
+  function startPlayback() {
+    if (currentStep >= LESSONS[currentLesson].notes.length) currentStep = 0;
+    isPlaying = true;
+    document.getElementById('playBtn').textContent = '❚❚';
+    playStep();
+    playInterval = setInterval(playStep, tempo);
+  }
+
+  function stopPlayback() {
+    isPlaying = false;
+    document.getElementById('playBtn').textContent = '▶';
+    if (playInterval) {
+      clearInterval(playInterval);
+      playInterval = null;
+    }
+  }
+
+  // Event listeners
+  document.getElementById('playBtn').addEventListener('click', () => {
+    if (isPlaying) stopPlayback();
+    else startPlayback();
+  });
+
+  document.getElementById('resetBtn').addEventListener('click', () => {
+    stopPlayback();
+    currentStep = 0;
+    updateUI();
+  });
+
+  document.getElementById('prevBtn').addEventListener('click', () => {
+    stopPlayback();
+    if (currentStep > 0) currentStep--;
+    updateUI();
+  });
+
+  document.getElementById('tempoSlider').addEventListener('input', (e) => {
+    tempo = parseInt(e.target.value);
+    document.getElementById('tempoValue').textContent = tempo + 'ms';
+    if (isPlaying) {
+      stopPlayback();
+      startPlayback();
+    }
+  });
+
+  // Keyboard support
+  const KEYBOARD_MAP = {
+    'a': 'C4', 'w': 'C#4', 's': 'D4', 'e': 'D#4', 'd': 'E4',
+    'f': 'F4', 't': 'F#4', 'g': 'G4', 'y': 'G#4', 'h': 'A4',
+    'u': 'A#4', 'j': 'B4', 'k': 'C5', 'o': 'C#5', 'l': 'D5'
+  };
+
+  document.addEventListener('keydown', (e) => {
+    const note = KEYBOARD_MAP[e.key.toLowerCase()];
+    if (note && !e.repeat) {
+      playSound(note);
+      const key = document.querySelector(`[data-note="${note}"]`);
+      if (key) {
+        key.classList.add('playing');
+        setTimeout(() => key.classList.remove('playing'), 200);
+      }
+      updateCurrentNote(note);
+    }
+    if (e.code === 'Space') {
+      e.preventDefault();
+      if (isPlaying) stopPlayback();
+      else startPlayback();
+    }
+  });
+
+  // Initialize
+  buildPiano();
+  buildLessonSelector();
+  updateUI();
+</script>
+</body>
+</html>
