@@ -3,11 +3,14 @@
 > Tek dosyada çalışan, sıfır bağımlılık gerektiren, görsel ve sesli piyano pratik stüdyosu.
 > Tarayıcıda açın, çalışsın — kurulum yok, hesap yok, internet bağlantısı bile gerekmez.
 
+[![Live Demo](https://img.shields.io/badge/demo-live-success?logo=github)](https://emredursun.github.io/piano-practice/)
 [![Status](https://img.shields.io/badge/status-stable-success)]()
 [![License](https://img.shields.io/badge/license-MIT-blue)](#-lisans)
 [![Made with](https://img.shields.io/badge/made%20with-vanilla%20JS-yellow)]()
 [![No Dependencies](https://img.shields.io/badge/dependencies-0-brightgreen)]()
 [![Browser Support](https://img.shields.io/badge/browser-modern-informational)]()
+
+**🌐 Canlı Demo:** [emredursun.github.io/piano-practice](https://emredursun.github.io/piano-practice/)
 
 ---
 
@@ -71,11 +74,11 @@ cd piano-practice
 
 # Tarayıcıda aç
 # Windows
-start piano-practice.html
+start index.html
 # macOS
-open piano-practice.html
+open index.html
 # Linux
-xdg-open piano-practice.html
+xdg-open index.html
 ```
 
 ### Yöntem 2: Yerel Sunucuyla Çalıştırma (Önerilen)
@@ -93,7 +96,7 @@ npx serve .
 php -S localhost:8000
 ```
 
-Ardından tarayıcıda `http://localhost:8000/piano-practice.html` adresini açın.
+Ardından tarayıcıda `http://localhost:8000/` adresini açın.
 
 ### Yöntem 3: GitHub Pages (Sıfır Kurulum)
 
@@ -101,7 +104,7 @@ Bu projeyi GitHub Pages üzerinden yayınlamak için:
 
 1. Repo `Settings` → `Pages` sekmesine gidin
 2. **Source** olarak `main` branch ve `/ (root)` seçin
-3. Birkaç saniye sonra `https://emredursun.github.io/piano-practice/piano-practice.html` üzerinden erişilebilir olur
+3. Birkaç saniye sonra **[https://emredursun.github.io/piano-practice/](https://emredursun.github.io/piano-practice/)** üzerinden erişilebilir olur
 
 ---
 
@@ -195,7 +198,7 @@ Parmak numaraları her aktif tuşun üzerinde **siyah daire içinde turuncu raka
 
 ```
 piano-practice/
-├── piano-practice.html    # Tüm uygulama (HTML + CSS + JS)
+├── index.html             # Tüm uygulama (HTML + CSS + JS)
 └── README.md              # Bu dosya
 ```
 
@@ -351,7 +354,7 @@ C: Tarayıcılar, kullanıcı etkileşimi olmadan ses çalmayı engeller. Herhan
 C: Tarayıcıda direkt açın. Tuşlara dokunarak çalabilirsiniz. Bilgisayar klavyesi kısayolları haricinde tüm özellikler çalışır.
 
 **S: Yeni ders nasıl eklerim?**
-C: `piano-practice.html` dosyasını açın, `LESSONS` objesini bulun ve [Veri Modeli](#veri-modeli) bölümündeki formatı izleyin.
+C: `index.html` dosyasını açın, `LESSONS` objesini bulun ve [Veri Modeli](#veri-modeli) bölümündeki formatı izleyin.
 
 **S: Gerçek piyano sesine yakın mı?**
 C: Web Audio API'nin sentezlediği bir ton — gerçek piyano sample'ı değil. Ancak öğrenme amaçlı yeterince temsilî.
