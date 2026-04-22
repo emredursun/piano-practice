@@ -79,7 +79,7 @@ flowchart LR
 2. Service Worker installs on first load; precaches app shell + bundled corpus manifest.
 3. On piece selection: SW fetches Salamander samples from R2 (progressive — Lite ≤ 5 MB first).
 4. AudioContext + AudioWorklet initialise on the first user gesture (browser autoplay policy).
-5. If user has a license token (from URL param or localStorage), `LicenseValidator` verifies Ed25519 signature client-side; no network required.
+5. If user has a license token (from URL param or localStorage), `LicenseValidator` verifies the Ed25519 signature client-side; no network required. The token's `email_hash` is an opaque blob to the client — it was computed server-side using a salt held only in Workers Secrets.
 
 ### 3.2 Practice session
 
@@ -143,7 +143,7 @@ Threat model detail: `docs/security/THREAT-MODEL.md` (workshop Week 4).
 |---|---|---|---|---|
 | App bundle | 1+ | MusicXML, MIDI ref, fingering manifests | N/A (public) | `corpus/metadata.json` — cryptographic hash per piece |
 | Cloudflare R2 | 1+ | Salamander samples (signed URLs) | At-rest AES-256 (default) | Path: `samples/salamander-v3/{note}.mp3` |
-| Cloudflare KV | 1 | `stripe_event_id → license_token`; idempotency | At-rest (default) | Key-value, TTL: none |
+| Cloudflare KV | 1 | Dual-key: `stripe:<event_id> → license_token` (idempotency), `email:<email_hash> → event_id` (recovery), `revoked:<event_id> → ts` (revocation) | At-rest (default) | Key-value, TTL: none |
 | IndexedDB (Dexie) | 1+ | Practice history, settings, sample cache | None v1; AES-GCM v3 | `sessions`, `pieces`, `settings`, `samples` (versioned) |
 | Supabase Postgres | 2+ | Users, licenses, sessions, audit | At-rest AES-256 + Vault | `public.users`, `public.licenses`, `public.practice_sessions`, `audit.events` |
 | AWS S3 (off-vendor) | 2+ | `audit_log` backup, Object Lock 7 yr | At-rest AES-256 + CMK | Weekly dump |

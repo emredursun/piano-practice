@@ -36,7 +36,10 @@ Phase 1 has **one** server endpoint (Cloudflare Worker) and two **client-local**
    - `checkout.session.completed` → issue license.
    - `charge.refunded` → revoke license.
    - Others → log + 200.
-5. Upsert to KV.
+5. Upsert to KV **with dual keys** (atomically, within the same Worker invocation):
+   - `stripe:<event_id> → <license_token>` — primary key, enforces idempotency.
+   - `email:<email_hash> → <event_id>` — secondary key, enables license recovery lookup (see §3).
+   - `revoked:<event_id> → <timestamp>` — written on `charge.refunded`; checked client-side on app boot.
 
 ### Responses
 
@@ -54,12 +57,16 @@ Phase 1 has **one** server endpoint (Cloudflare Worker) and two **client-local**
 
 ```ts
 type LicensePayload = {
-  email_hash: string;    // SHA-256(email) hex
+  email_hash: string;    // SHA-256(LICENSE_EMAIL_SALT + email) hex
   sku: "lifetime-v1";
   issued_at: number;     // Unix seconds
   version: 1;            // Schema version
 };
 ```
+
+- **`LICENSE_EMAIL_SALT`** is a 32-byte random value stored in Cloudflare Workers Secrets. It exists only server-side. Plain `SHA-256(email)` would be reversible via rainbow tables (email addresses have predictable structure); salting closes that attack.
+- The salt is **long-lived**. Rotating it invalidates all existing license tokens and requires a coordinated re-issuance to all customers via Stripe customer list — treat as a last-resort incident response, not routine maintenance.
+- The client cannot compute the hash (no salt); it only verifies the signed token as an opaque blob. This is by design — only the Worker mints and verifies.
 
 Signed Ed25519 → base64url encoded → shaped as `pp-<ver>.<payload>.<sig>`.
 
@@ -76,9 +83,16 @@ Signed Ed25519 → base64url encoded → shaped as `pp-<ver>.<payload>.<sig>`.
 ### Processing
 
 1. Validate email shape (Zod).
-2. Look up Stripe customer by email (Stripe API).
-3. If found, re-issue **the same** license token (or fetch from KV by `email_hash`).
-4. Send email via transactional provider.
+2. Compute `email_hash = SHA-256(LICENSE_EMAIL_SALT + email)` server-side.
+3. Primary path — **KV lookup**:
+   - `KV.get('email:' + email_hash)` → returns `event_id` (or null).
+   - If found: `KV.get('stripe:' + event_id)` → returns the originally-issued `license_token`. Re-send **exactly the same token** (stable across recoveries).
+4. Fallback path — **Stripe API** (only if KV miss, e.g., ancient purchase before secondary-key backfill):
+   - Stripe Customer Search by email.
+   - If customer found, locate their latest successful `checkout.session.completed` event.
+   - Replay through the internal issuance path to mint a token for the same `{email_hash, sku, issued_at-of-original, version}`. Backfill both KV keys.
+5. Send email via transactional provider (same template as the original post-purchase email).
+6. **Always** respond 202, whether found or not (privacy / enumeration prevention — see below).
 
 ### Responses
 

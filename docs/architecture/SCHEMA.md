@@ -142,7 +142,13 @@ create table audit.events (
   action text not null,
   resource text not null,
   metadata_hash text not null,  -- no raw PII
-  ip_truncated text,            -- /24 IPv4 or /48 IPv6
+  -- IPv4 /24 (last octet zeroed) + IPv6 /48 (last 80 bits zeroed).
+  -- /48 in IPv6 CIDR retains 48 bits (coarser than /64, which retains 64).
+  -- /48 identifies the site prefix (household / ISP customer assignment),
+  -- not the specific subnet within it. This aligns with Google Analytics +
+  -- EDPB anonymisation guidance. Going coarser to /32 loses legitimate
+  -- operations signal (geo region); /48 is the calibrated balance.
+  ip_truncated text,
   ua_family text                -- first 100 chars
 ) partition by range (ts);
 ```

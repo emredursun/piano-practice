@@ -19,7 +19,7 @@ Content-Security-Policy:
               https://*.ingest.sentry.io https://api.honeycomb.io
               https://eu.i.posthog.com;
   media-src 'self' https://*.r2.cloudflarestorage.com;
-  worker-src 'self' blob:;
+  worker-src 'self';
   frame-src https://js.stripe.com https://hooks.stripe.com;
   frame-ancestors 'none';
   base-uri 'self';
@@ -69,6 +69,7 @@ Looser CSP while prototyping. Must not ship to production. A dedicated `_headers
 | `frame-ancestors 'none'` | | No one frames us |
 | `require-trusted-types-for 'script'` | | DOM-XSS hardening |
 | `trusted-types default osmd-sanitized` | | OSMD output sanitised via named policy |
+| `worker-src 'self'` | | Service Worker + AudioWorklet from same origin only. `blob:` **not** in the allowlist — AudioWorklet modules are served as static first-party assets; dynamic blob-URL workers are a potential XSS vector (attacker-controlled blob content executing as a worker). If Phase-0 prototype reveals that Tone.js's AudioWorklet loader requires `blob:` under some configuration, re-add with a written rationale + Sentry CSP-report audit. |
 | `base-uri 'self'` | | Prevent base-tag injection |
 | `form-action 'self' checkout.stripe.com` | | Only our forms + Stripe |
 

@@ -109,7 +109,7 @@ See `MASTER-PLAN.md §5.5`.
 - **Server-side price lookup** via `STRIPE_PRICE_LIFETIME_TRY` / `_EUR` / `_USD` env vars; **never trust client** for price.
 - **3DS forced in EU** via Stripe Radar rules.
 - **Refund SOP** documented; refunds trigger license-key revocation in KV.
-- **License key**: Ed25519-signed JWT-shaped token. Payload = `{email_hash, sku, issued_at, version}`. Verified client-side at app load.
+- **License key**: Ed25519-signed JWT-shaped token. Payload = `{email_hash, sku, issued_at, version}`, where `email_hash = SHA-256(LICENSE_EMAIL_SALT + email)` and `LICENSE_EMAIL_SALT` is a 32-byte server-only secret in Cloudflare Workers Secrets. Verified client-side at app load. See `docs/architecture/API-CONTRACT.md §2` for salt rationale and rotation policy.
 - **Stripe Tax** enabled for EU VAT compliance from Day 1.
 
 ---

@@ -137,18 +137,18 @@ See [docs/SECURITY.md](docs/SECURITY.md) and `MASTER-PLAN.md §5`.
 
 These are decided. Do not re-open without explicit owner override + ADR amendment.
 
-1. **Do not target users under 16.** No COPPA flow, no family tier, no "for kids" variant in Phase 1/2.
+1. **Do not target users under 16.** No COPPA flow, no family tier, no "for kids" variant in Phase 1/2. (ADR-017)
 2. **Do not launch in US, UK, or BR.** Geo-fence features that require it. (ADR-018)
-3. **Do not add multi-device sync in v1.0.** Device-local Dexie only; JSON export/import is the portability story. Yjs/CRDT is Phase 3 (ADR-013, ADR-014).
+3. **Do not add multi-device sync in v1.0.** Device-local Dexie only; JSON export/import is the portability story. Yjs/CRDT is Phase 3. (ADR-013, ADR-014)
 4. **Do not introduce user accounts in Phase 1.** License key via Stripe email receipt is the entire auth story. (ADR-019)
-5. **Do not accept user-uploaded MusicXML/MIDI in Phase 1.** Zero upload surface until the full pipeline in §5.3 exists.
-6. **Do not add repertoire outside the approved PD corpus.** Any addition requires a row in `docs/legal/REPERTOIRE-PROVENANCE.md` with PD verification per jurisdiction.
-7. **Do not collect children's data, biometrics, or precise geolocation.** Ever, at any phase, without ADR amendment.
-8. **Do not ship runtime ML / personalization without a DPIA.** `pianoplayer` build-time fingering is fine; anything per-user is Phase 3+ only.
-9. **Do not use Stripe Elements.** Checkout (hosted) only — this is what keeps PCI scope at SAQ-A.
-10. **Do not skip the CSP Report-Only phase.** Two weeks minimum before enforce.
-11. **Do not change the phase/gate timeline casually.** Master Plan timeline is 52 weeks Y1. Re-planning requires a gate re-run.
-12. **Do not touch `index.html` or `README.md` at the repo root.** They are the v0 prototype artefact for the GitHub Pages demo.
+5. **Do not accept user-uploaded MusicXML/MIDI in Phase 1.** Zero upload surface until the full pipeline in `MASTER-PLAN.md §5.3` exists. (MASTER-PLAN §2.4, §5.3)
+6. **Do not add repertoire outside the approved PD corpus.** Any addition requires a row in `docs/legal/REPERTOIRE-PROVENANCE.md` with PD verification per jurisdiction. (ADR-011)
+7. **Do not collect children's data, biometrics, or precise geolocation.** Ever, at any phase, without ADR amendment. (ADR-017, MASTER-PLAN §5.4)
+8. **Do not ship runtime ML / personalization without a DPIA.** `pianoplayer` build-time fingering is fine; anything per-user is Phase 3+ only. (ADR-005, MASTER-PLAN §5.9)
+9. **Do not use Stripe Elements.** Checkout (hosted) only — this is what keeps PCI scope at SAQ-A. (ADR-010)
+10. **Do not skip the CSP Report-Only phase.** Two weeks minimum before enforce. (MASTER-PLAN §5.2, `docs/security/CSP.md §4`)
+11. **Do not change the phase/gate timeline casually.** Master Plan timeline is 52 weeks Y1. Re-planning requires a gate re-run. (ADR-020, MASTER-PLAN §2.2, §11)
+12. **Do not touch `index.html` or `README.md` at the repo root.** They are the v0 prototype artefact for the GitHub Pages demo. (repo preservation policy)
 
 ---
 
