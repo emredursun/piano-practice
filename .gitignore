@@ -1,5 +1,7 @@
+# ─────────────────────────────────────────────────────────────
 # Devran AI Kit (local dev tooling — never pushed to remote)
 # Install: npx @devran-ai/kit init
+# ─────────────────────────────────────────────────────────────
 .agent/
 .codex/
 .worktreeinclude
@@ -7,6 +9,7 @@
 # Claude Code (commands and worktrees are local-only)
 .claude/commands/
 .claude/worktrees/
+.claude/workspace/
 .claude/settings.local.json
 
 # Cursor (local commands and rules)
@@ -17,7 +20,103 @@
 .opencode/commands/
 .opencode/opencode.json
 
-# OS / editor cruft
+# ─────────────────────────────────────────────────────────────
+# Node / package managers
+# ─────────────────────────────────────────────────────────────
+node_modules/
+.pnp
+.pnp.js
+
+# ─────────────────────────────────────────────────────────────
+# Builds
+# ─────────────────────────────────────────────────────────────
+dist/
+build/
+out/
+.vite/
+.cache/
+.turbo/
+
+# ─────────────────────────────────────────────────────────────
+# Coverage & test artefacts
+# ─────────────────────────────────────────────────────────────
+coverage/
+*.lcov
+.nyc_output/
+playwright-report/
+test-results/
+.playwright/
+
+# ─────────────────────────────────────────────────────────────
+# Logs
+# ─────────────────────────────────────────────────────────────
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# ─────────────────────────────────────────────────────────────
+# Environment variables — NEVER commit
+# ─────────────────────────────────────────────────────────────
+.env
+.env.*
+!.env.example
+
+# ─────────────────────────────────────────────────────────────
+# Editor & OS noise
+# ─────────────────────────────────────────────────────────────
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+!.vscode/settings.shared.json
+.idea/
+*.swp
+*.swo
 .DS_Store
 [Tt]humbs.db
-*.swp
+ehthumbs.db
+Desktop.ini
+
+# ─────────────────────────────────────────────────────────────
+# TypeScript incremental build
+# ─────────────────────────────────────────────────────────────
+*.tsbuildinfo
+.tscache/
+
+# ─────────────────────────────────────────────────────────────
+# Generated / fetched artefacts
+# ─────────────────────────────────────────────────────────────
+/public/samples-cache/
+/corpus/fingering/*.generated.json
+/.wrangler/
+.vercel/
+.netlify/
+
+# ─────────────────────────────────────────────────────────────
+# Sentry source maps (uploaded via CI, not committed)
+# ─────────────────────────────────────────────────────────────
+.sentryclirc
+
+# ─────────────────────────────────────────────────────────────
+# Audit & research outputs (local-only drafts until promoted)
+# ─────────────────────────────────────────────────────────────
+docs/research/**/INTERVIEWS-RAW/
+docs/research/**/*.draft.md
+
+# ─────────────────────────────────────────────────────────────
+# Agent engine cache (Claude Code local staging)
+# ─────────────────────────────────────────────────────────────
+.agent/engine/*.cache
+
+# ─────────────────────────────────────────────────────────────
+# Archives & temporary
+# ─────────────────────────────────────────────────────────────
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+tmp/
+temp/
