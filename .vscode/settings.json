@@ -1,0 +1,26 @@
+{
+  "// purpose": "Hide Devran AI Kit local tooling from Explorer without affecting tool functionality. Files remain on disk and fully usable by Claude Code, Cursor, OpenCode, etc. search.exclude inherits from files.exclude automatically, so it is not duplicated here.",
+
+  "files.exclude": {
+    "**/.agent": true,
+    "**/.claude/commands": true,
+    "**/.claude/worktrees": true,
+    "**/.claude/settings.local.json": true,
+    "**/.cursor/commands": true,
+    "**/.cursor/rules": true,
+    "**/.opencode/commands": true,
+    "**/.opencode/opencode.json": true,
+    "**/.codex": true,
+    "**/.worktreeinclude": true
+  },
+
+  "files.watcherExclude": {
+    "**/.agent/**": true,
+    "**/.claude/commands/**": true,
+    "**/.claude/worktrees/**": true,
+    "**/.cursor/commands/**": true,
+    "**/.cursor/rules/**": true,
+    "**/.opencode/commands/**": true,
+    "**/.codex/**": true
+  }
+}
