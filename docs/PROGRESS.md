@@ -164,7 +164,8 @@ In rough ordering (some parallel):
 | 2026-04-22 | Tier-1 foundation (CLAUDE.md + ADRs + design/ops/product specs) | `49ba49a` | M-02 |
 | 2026-04-22 | Rebased onto main; `.gitignore` conflict resolved | — | M-03 |
 | 2026-04-22 | Phase-0 Day-1 ambiguities + Week-1 artefacts | `3224091` | M-04 |
-| 2026-04-22 | Progress log + PR preparation | (this commit) | — |
+| 2026-04-22 | Progress log + PR #2 opened (main ← feature branch) | `b91a02e` | M-05 |
+| 2026-04-22 | PR #2 review: 3 Gemini findings accepted, 1 declined w/ rationale (IPv6 /48); Hard NO list citations tightened | `b9f8466` | M-06 |
 
 New rows appended per session.
 
