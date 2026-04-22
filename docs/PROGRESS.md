@@ -12,9 +12,9 @@
 |---|---|
 | Phase | **Pre-Phase-0** (about to start Validation Sprint Week 1 Day 1) |
 | Gate | G1 target: Week 3 end |
-| Active branch | `claude/sharp-spence-f80ab3` (worktree) |
-| Latest commits | `3224091` (Phase-0 prep), `49ba49a` (Tier-1 foundation) |
-| Divergence from `main` | Ahead by **2 commits** (this branch); rebased onto current `main` (`05fbfb8`) |
+| Active branch | `main` (feature branch merged and retired) |
+| Latest commit on main | `f3be6f6` — chore(progress): log M-07 |
+| Divergence from `origin/main` | None (in sync) |
 | Code written | None — documentation only |
 | Blockers | Founder hardware inventory (PHASE0-SETUP §7 FOUNDER-TBD) |
 
