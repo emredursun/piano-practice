@@ -1,0 +1,23 @@
+# Devran AI Kit (local dev tooling — never pushed to remote)
+# Install: npx @devran-ai/kit init
+.agent/
+.codex/
+.worktreeinclude
+
+# Claude Code (commands and worktrees are local-only)
+.claude/commands/
+.claude/worktrees/
+.claude/settings.local.json
+
+# Cursor (local commands and rules)
+.cursor/commands/
+.cursor/rules/
+
+# OpenCode (local commands and config)
+.opencode/commands/
+.opencode/opencode.json
+
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+*.swp
