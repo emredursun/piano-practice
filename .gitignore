@@ -19,5 +19,5 @@
 
 # OS / editor cruft
 .DS_Store
-Thumbs.db
+[Tt]humbs.db
 *.swp
