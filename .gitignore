@@ -103,7 +103,11 @@ Desktop.ini
 # ─────────────────────────────────────────────────────────────
 # Audit & research outputs (local-only drafts until promoted)
 # ─────────────────────────────────────────────────────────────
-docs/research/**/INTERVIEWS-RAW/
+# Raw interview transcripts, recordings, and mapping files — NEVER committed.
+# Gitkeep inside ensures directory structure is documented, but contents
+# (recordings, transcripts, name-to-pseudonym mappings) stay local only.
+docs/research/**/RAW/*
+!docs/research/**/RAW/.gitkeep
 docs/research/**/*.draft.md
 
 # ─────────────────────────────────────────────────────────────

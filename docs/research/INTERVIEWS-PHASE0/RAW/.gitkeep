@@ -1,0 +1,17 @@
+# docs/research/INTERVIEWS-PHASE0/RAW/
+
+This directory holds raw interview artefacts:
+
+- Audio/video recordings (.mov, .mp4, .webm)
+- Verbatim transcripts (.txt, .md)
+- Pseudonym → real-name mapping (MAPPING.txt)
+- Signed consent replies (consent.txt)
+
+**Everything here is gitignored.** Only this `.gitkeep` file is committed — so the directory structure is documented, but no personal data ever leaves the founder's laptop.
+
+Retention: 90 days from interview date, then deletion per
+`../CONSENT-FORM.md`.
+
+Encryption at rest: macOS FileVault / Windows BitLocker / Linux LUKS — always on.
+
+See [../CONSENT-FORM.md](../CONSENT-FORM.md) and [../INTERVIEW-GUIDE.md](../INTERVIEW-GUIDE.md).
